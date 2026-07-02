@@ -1,73 +1,169 @@
-* { box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
+// מילוני התמונות (כמו קודם)
+const dishImages = {
+    'פנה': {
+        'פסטו': 'PHOTO-2026-07-02-23-39-23.jpg',
+        'שמנת': 'PHOTO-2026-07-02-23-39-24 2.jpg',
+        'פטריות': 'PHOTO-2026-07-02-23-39-24 3.jpg',
+        'עגבניות': 'PHOTO-2026-07-02-23-39-24.jpg',
+        'רוזה': 'PHOTO-2026-07-02-23-39-23 3.jpg',
+        'ללא רוטב': 'PHOTO-2026-07-02-23-39-23 2.jpg'
+    },
+    'פוזילי': {
+        'פסטו': 'PHOTO-2026-07-02-23-39-11.jpg',
+        'שמנת': 'PHOTO-2026-07-02-23-39-15.jpg',
+        'פטריות': 'PHOTO-2026-07-02-23-39-11 5.jpg',
+        'עגבניות': 'PHOTO-2026-07-02-23-39-11 4.jpg', 
+        'רוזה': 'PHOTO-2026-07-02-23-39-11 3.jpg',
+        'ללא רוטב': 'PHOTO-2026-07-02-23-39-11 2.jpg'
+    },
+    'ספגטי': {
+        'פסטו': 'PHOTO-2026-07-02-23-39-07.jpg',
+        'שמנת': 'PHOTO-2026-07-02-23-39-07 5.jpg',
+        'עגבניות': 'PHOTO-2026-07-02-23-39-07 4.jpg',
+        'רוזה': 'PHOTO-2026-07-02-23-39-07 3.jpg',
+        'ללא רוטב': 'PHOTO-2026-07-02-23-39-07 2.jpg'
+    },
+    'פרפלה': {
+        'פסטו': 'PHOTO-2026-07-02-23-39-39 2.jpg',
+        'פטריות': 'PHOTO-2026-07-02-23-39-39.jpg',
+        'רוזה': 'PHOTO-2026-07-02-23-39-40 2.jpg',
+        'עגבניות': 'PHOTO-2026-07-02-23-39-40 3.jpg',
+        'שמנת': 'PHOTO-2026-07-02-23-39-40 4.jpg',
+        'ללא רוטב': 'PHOTO-2026-07-02-23-39-40.jpg'
+    }
+};
 
-body { background-color: #f5f5f5; margin: 0; padding: 20px; display: flex; justify-content: center; }
+const imageAssets = {
+    toppings: {
+        'טבעות בצל': 'PHOTO-2026-07-02-23-40-09.jpg',
+        'סלט ירקות': 'PHOTO-2026-07-02-23-40-10 2.jpg',
+        'ציפס': 'PHOTO-2026-07-02-23-40-10 3.jpg', 
+        'לחם שום': 'PHOTO-2026-07-02-23-40-10 4.jpg',
+        'סלט יווני': 'PHOTO-2026-07-02-23-40-10 5.jpg',
+        'גבינת פרמזן': 'PHOTO-2026-07-02-23-40-10.jpg'
+    },
+    drinks: {
+        'תה חם': 'PHOTO-2026-07-02-23-39-55 4.jpg',  
+        'מים': 'PHOTO-2026-07-02-23-39-55 5.jpg',      
+        'אספרסו': 'PHOTO-2026-07-02-23-39-55 6.jpg',   
+        'קולה': 'PHOTO-2026-07-02-23-39-55.jpg',       
+        'תה קר': 'PHOTO-2026-07-02-23-39-54 2.jpg',    
+        'מיץ תפוזים': 'PHOTO-2026-07-02-23-39-54.jpg', 
+        'מיץ תפוחים קר': 'PHOTO-2026-07-02-23-39-55 2.jpg', 
+        'פאנטה': 'PHOTO-2026-07-02-23-39-55 3.jpg'     
+    }
+};
 
-.app-container { display: flex; gap: 20px; max-width: 1200px; width: 100%; }
+// === משתנים גלובליים ===
+const mainDishImg = document.getElementById('main-dish-img');
+const nameInput = document.getElementById('customer-name');
+const submitBtn = document.getElementById('submit-btn');
+const displayNameSpan = document.getElementById('display-name');
 
-.controls-section { display: flex; flex-direction: column; gap: 15px; width: 350px; }
-
-.control-box { background-color: white; border: 1px solid #000; padding: 15px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
-
-.control-box h3 { margin-top: 0; text-decoration: underline; text-align: center; font-size: 16px; margin-bottom: 15px; }
-
-.control-box label { display: block; margin-bottom: 8px; cursor: pointer; }
-
-.input-group { display: flex; align-items: center; margin-bottom: 10px; }
-.input-group label { width: 80px; margin-bottom: 0; font-weight: bold; }
-.input-group input, .input-group textarea { flex: 1; padding: 5px; border: 1px solid #ccc; }
-.input-group textarea { height: 60px; resize: none; }
-
-/* דרישות מטלה: עיצוב כפתור שליחה (מנוטרל ופעיל) */
-.submit-btn {
-    display: block; width: 100%; margin: 15px auto 0; padding: 12px;
-    background-color: #4CAF50; color: white; border: none; cursor: pointer;
-    font-weight: bold; font-size: 16px; border-radius: 5px; transition: 0.3s;
+// === דרישות מטלה: יצירת תמונות הצ'ק-בוקס בחצי שקיפות מראש ===
+function createFadedImages(containerId, assetsDict, typePrefix) {
+    const container = document.getElementById(containerId);
+    Object.keys(assetsDict).forEach(itemName => {
+        const img = document.createElement('img');
+        img.src = `images/${assetsDict[itemName]}`;
+        img.alt = itemName;
+        img.id = `img-${typePrefix}-${itemName.replace(/\s+/g, '-')}`;
+        img.className = 'faded-img'; // קלאס זה מגדיר אותן כחצי שקופות ב-CSS
+        container.appendChild(img);
+    });
 }
 
-.submit-btn:disabled {
-    background-color: gray;
-    opacity: 0.5; /* דרישת מטלה: כפתור מופיע בשקיפות 0.5 */
-    cursor: not-allowed;
+createFadedImages('toppings-container', imageAssets.toppings, 'top');
+createFadedImages('drinks-container', imageAssets.drinks, 'drink');
+
+
+// === דרישות מטלה: בדיקת ולידציה לכפתור (זמין רק אחרי מילוי פרטים) ===
+function checkFormValidity() {
+    const hasName = nameInput.value.trim() !== '';
+    const hasPastaRadio = document.querySelector('input[name="pasta-shape"]:checked') !== null;
+    
+    // אם תיבת הטקסט מלאה ויש לפחות בחירה אחת של כפתור רדיו (פסטה)
+    if (hasName && hasPastaRadio) {
+        submitBtn.disabled = false;
+    } else {
+        submitBtn.disabled = true;
+    }
 }
 
-.submit-btn:not(:disabled):hover { background-color: #45a049; }
 
-/* אזור תצוגה מקדימה */
-.preview-section { flex: 1; background-color: white; border: 2px solid #000; display: flex; flex-direction: column; }
-.preview-header { border-bottom: 2px solid #000; padding: 10px 20px; background-color: #eee; }
-.preview-header h2 { margin: 0; font-size: 24px; color: #333; }
+// === עדכון טקסט חי והפעלת ולידציה ===
+nameInput.addEventListener('input', (e) => {
+    displayNameSpan.textContent = e.target.value;
+    checkFormValidity();
+});
 
-.preview-grid { display: grid; grid-template-columns: 1fr 250px; grid-template-rows: 200px 1fr; flex: 1; }
-.grid-drink { grid-column: 2; grid-row: 1 / 3; border-right: 2px solid #000; padding: 15px; }
-.grid-topping { grid-column: 1; grid-row: 1; border-bottom: 2px solid #000; padding: 15px; }
-.grid-main-dish { grid-column: 1; grid-row: 2; padding: 15px; text-align: center; }
 
-.preview-grid h3 { margin: 0 0 10px 0; }
-
-.grid-main-dish img { max-height: 300px; max-width: 100%; object-fit: contain; }
-
-/* גלריית תמונות לתוספות ושתייה */
-.items-gallery { display: flex; flex-wrap: wrap; gap: 10px; }
-
-/* דרישות מטלה: תמונות צ'ק-בוקס מופיעות מראש בחצי שקיפות */
-.faded-img {
-    width: 60px; height: 60px; object-fit: contain;
-    opacity: 0.3; /* מותאם ל"חצי שקיפות", אפשר לשנות ל-0.5 */
-    filter: grayscale(80%);
-    transition: 0.3s all;
+// === התנהגות כפתורי רדיו (המנה המרכזית - מוסתרת עד בחירה) ===
+function updateMainDishImage() {
+    const selectedPasta = document.querySelector('input[name="pasta-shape"]:checked');
+    const selectedSauce = document.querySelector('input[name="sauce"]:checked');
+    
+    if (selectedPasta) {
+        const pasta = selectedPasta.value;
+        const sauce = selectedSauce ? selectedSauce.value : 'ללא רוטב'; // ברירת מחדל פנימית אם לא נבחר רוטב
+        
+        if (dishImages[pasta] && dishImages[pasta][sauce]) {
+            mainDishImg.src = `images/${dishImages[pasta][sauce]}`;
+            mainDishImg.style.display = 'block';
+        }
+    }
 }
 
-/* הדגשת התמונה בבחירה */
-.faded-img.active-img {
-    opacity: 1;
-    filter: none;
-    transform: scale(1.15);
+// האזנה לכפתורי רדיו
+document.querySelectorAll('input[type="radio"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+        updateMainDishImage();
+        checkFormValidity(); // ולידציה
+    });
+});
+
+
+// === דרישות מטלה: הדגשת תמונות צ'קבוקס בעת בחירה ===
+function handleCheckboxSelection(inputSelector, prefix) {
+    document.querySelectorAll(inputSelector).forEach(checkbox => {
+        checkbox.addEventListener('change', (e) => {
+            const itemName = e.target.value.replace(/\s+/g, '-');
+            const imgElement = document.getElementById(`img-${prefix}-${itemName}`);
+            if (imgElement) {
+                // הוספה או הסרה של הקלאס שמבטל את השקיפות ומגדיל את התמונה
+                imgElement.classList.toggle('active-img', e.target.checked);
+            }
+        });
+    });
 }
 
-/* מודל סיכום (Modal) */
-.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); }
-.modal-content { background-color: #fff; margin: 10% auto; padding: 25px; border-radius: 8px; width: 400px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-.modal-content h2 { margin-top: 0; text-align: center; border-bottom: 2px solid #4CAF50; padding-bottom: 10px; color: #333; }
-.modal-content p { font-size: 16px; margin-bottom: 8px; border-bottom: 1px dashed #ccc; padding-bottom: 5px;}
-#close-modal-btn { display: block; width: 100%; padding: 10px; margin-top: 20px; background-color: #333; color: white; border: none; cursor: pointer; border-radius: 5px; font-size: 16px;}
-#close-modal-btn:hover { background-color: #555; }
+handleCheckboxSelection('input[name="topping"]', 'top');
+handleCheckboxSelection('input[name="drink"]', 'drink');
+
+
+// === דרישות מטלה: לחיצה על כפתור אישור מקפיצה הודעת סיכום ===
+const modal = document.getElementById('summary-modal');
+const closeModalBtn = document.getElementById('close-modal-btn');
+
+submitBtn.addEventListener('click', () => {
+    const name = nameInput.value;
+    const notes = document.getElementById('customer-notes').value || 'ללא הערות';
+    
+    const pasta = document.querySelector('input[name="pasta-shape"]:checked')?.value || 'לא נבחר';
+    const sauce = document.querySelector('input[name="sauce"]:checked')?.value || 'ללא רוטב';
+    
+    const toppings = Array.from(document.querySelectorAll('input[name="topping"]:checked')).map(cb => cb.value).join(', ') || 'ללא תוספות';
+    const drinks = Array.from(document.querySelectorAll('input[name="drink"]:checked')).map(cb => cb.value).join(', ') || 'ללא שתייה';
+
+    document.getElementById('summary-name').textContent = name;
+    document.getElementById('summary-pasta').textContent = pasta;
+    document.getElementById('summary-sauce').textContent = sauce;
+    document.getElementById('summary-toppings').textContent = toppings;
+    document.getElementById('summary-drinks').textContent = drinks;
+    document.getElementById('summary-notes').textContent = notes;
+
+    modal.style.display = 'block';
+});
+
+// סגירת חלון הסיכום
+closeModalBtn.addEventListener('click', () => { modal.style.display = 'none'; });
