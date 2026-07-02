@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מערכת הזמנות אינטראקטיבית</title>
+    <title>מערכת הזמנות פסטה - פרויקט סיכום</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,7 +12,7 @@
         <aside class="controls-section">
             
             <div class="control-box">
-                <h3>שתייה קרה/חמה</h3>
+                <h3>שתייה קרה/חמה (צ'ק-בוקס)</h3>
                 <label><input type="checkbox" name="drink" value="מיץ תפוזים"> מיץ תפוזים</label>
                 <label><input type="checkbox" name="drink" value="תה קר"> תה קר</label>
                 <label><input type="checkbox" name="drink" value="קולה"> קולה</label>
@@ -24,25 +24,25 @@
             </div>
 
             <div class="control-box">
-                <h3>צורת פסטה</h3>
+                <h3>צורת פסטה (כפתורי רדיו)</h3>
                 <label><input type="radio" name="pasta-shape" value="ספגטי"> ספגטי</label>
-                <label><input type="radio" name="pasta-shape" value="פנה" checked> פנה</label>
+                <label><input type="radio" name="pasta-shape" value="פנה"> פנה</label>
                 <label><input type="radio" name="pasta-shape" value="פוזילי"> פוזילי</label>
                 <label><input type="radio" name="pasta-shape" value="פרפלה"> פרפלה</label>
             </div>
 
             <div class="control-box">
-                <h3>רוטב</h3>
+                <h3>רוטב (כפתורי רדיו)</h3>
                 <label><input type="radio" name="sauce" value="שמנת"> שמנת</label>
                 <label><input type="radio" name="sauce" value="עגבניות"> עגבניות</label>
                 <label><input type="radio" name="sauce" value="רוזה"> רוזה</label>
                 <label><input type="radio" name="sauce" value="פסטו"> פסטו</label>
                 <label><input type="radio" name="sauce" value="פטריות"> פטריות</label>
-                <label><input type="radio" name="sauce" value="ללא רוטב" checked> ללא רוטב</label>
+                <label><input type="radio" name="sauce" value="ללא רוטב"> ללא רוטב</label>
             </div>
 
             <div class="control-box">
-                <h3>תוספת</h3>
+                <h3>תוספת (צ'ק-בוקס)</h3>
                 <label><input type="checkbox" name="topping" value="לחם שום"> לחם שום</label>
                 <label><input type="checkbox" name="topping" value="גבינת פרמזן"> גבינת פרמזן</label>
                 <label><input type="checkbox" name="topping" value="ציפס"> צ'יפס</label>
@@ -52,20 +52,16 @@
             </div>
 
             <div class="control-box client-details">
-                <h3>פרטי לקוח והערות נוספות</h3>
+                <h3>פרטי לקוח</h3>
                 <div class="input-group">
                     <label>שם מלא:</label>
-                    <input type="text" id="customer-name" placeholder="הכנס שם מלא">
-                </div>
-                <div class="input-group">
-                    <label>טלפון:</label>
-                    <input type="tel" id="customer-phone" placeholder="הכנס טלפון">
+                    <input type="text" id="customer-name" placeholder="חובה למלא שם">
                 </div>
                 <div class="input-group">
                     <label>הערות להזמנה:</label>
                     <textarea id="customer-notes"></textarea>
                 </div>
-                <button id="submit-btn" class="submit-btn">שלחו הזמנה</button>
+                <button id="submit-btn" class="submit-btn" disabled>שלחו הזמנה</button>
             </div>
 
         </aside>
@@ -78,16 +74,16 @@
             <div class="preview-grid">
                 <div class="grid-drink">
                     <h3>שתייה:</h3>
-                    <img id="side-drink-img" src="" alt="שתייה" style="display: none;">
+                    <div id="drinks-container" class="items-gallery"></div>
                 </div>
                 
                 <div class="grid-topping">
-                    <h3>תוספת:</h3>
-                    <img id="side-topping-img" src="" alt="תוספת" style="display: none;">
+                    <h3>תוספות:</h3>
+                    <div id="toppings-container" class="items-gallery"></div>
                 </div>
                 
                 <div class="grid-main-dish">
-                    <h3>המנה + הרוטב:</h3>
+                    <h3>מנה עיקרית (מוסתרת עד לבחירה):</h3>
                     <img id="main-dish-img" src="" alt="מנה עיקרית" style="display: none;">
                 </div>
             </div>
@@ -98,13 +94,12 @@
         <div class="modal-content">
             <h2>סיכום הזמנה</h2>
             <p><strong>שם הלקוח:</strong> <span id="summary-name"></span></p>
-            <p><strong>טלפון:</strong> <span id="summary-phone"></span></p>
             <p><strong>צורת פסטה:</strong> <span id="summary-pasta"></span></p>
             <p><strong>רוטב:</strong> <span id="summary-sauce"></span></p>
             <p><strong>תוספות:</strong> <span id="summary-toppings"></span></p>
             <p><strong>שתייה:</strong> <span id="summary-drinks"></span></p>
             <p><strong>הערות:</strong> <span id="summary-notes"></span></p>
-            <button id="close-modal-btn">סגור ושמור</button>
+            <button id="close-modal-btn">אישור וסגירה</button>
         </div>
     </div>
 
