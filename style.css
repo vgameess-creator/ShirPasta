@@ -1,6 +1,6 @@
 * { 
     box-sizing: border-box; 
-    font-family: 'Heebo', sans-serif; /* גופן מודרני וקריא */
+    font-family: 'Heebo', sans-serif; 
 }
 
 body { 
@@ -11,7 +11,7 @@ body {
     display: flex; 
     align-items: center; 
     justify-content: center; 
-    background: #f0f2f5; /* רקע אפור-תכלכל יוקרתי של מערכות מידע */
+    background: #f0f2f5; 
 }
 
 .app-container { 
@@ -74,14 +74,12 @@ body {
     cursor: pointer; 
 }
 
-/* הסתרת כפתור הרדיו המקורי */
 .options-grid input { 
     position: absolute; 
     opacity: 0; 
     cursor: pointer; 
 }
 
-/* עיצוב הצ'יפ עצמו */
 .chip {
     display: block;
     padding: 8px 10px;
@@ -95,7 +93,6 @@ body {
     border: 1px solid #dadce0;
 }
 
-/* מצב נבחר (Hover ו- Checked) */
 .options-grid label:hover .chip { background: #f1f3f4; }
 .options-grid input:checked ~ .chip {
     background: #fff3e0; 
@@ -105,7 +102,6 @@ body {
     box-shadow: 0 2px 6px rgba(255, 152, 0, 0.2);
 }
 
-/* מצב מנוטרל (כשהפסטה עוד לא נבחרה) */
 .options-grid input:disabled ~ .chip {
     opacity: 0.4;
     cursor: not-allowed;
@@ -138,7 +134,8 @@ body {
 .preview-header h2 { margin: 0; font-size: 22px; font-weight: 400; }
 #display-name { font-weight: 700; color: #ffeb3b; }
 
-.preview-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 140px 1fr; flex: 1; }
+/* התיקון לקו המפריד: שורת התוספות מקבלת auto במקום גובה קבוע */
+.preview-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto 1fr; flex: 1; }
 
 .grid-topping { grid-column: 1; grid-row: 1; border-bottom: 1px solid #f0f0f0; border-left: 1px solid #f0f0f0; padding: 20px; }
 .grid-drink { grid-column: 2; grid-row: 1; border-bottom: 1px solid #f0f0f0; padding: 20px; }
