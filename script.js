@@ -1,174 +1,73 @@
-// ==========================================
-// 1. מילון התמונות המלא
-// ==========================================
+* { box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
 
-const dishImages = {
-    'פנה': {
-        'פסטו': 'PHOTO-2026-07-02-23-39-23.jpg',
-        'שמנת': 'PHOTO-2026-07-02-23-39-24 2.jpg',
-        'פטריות': 'PHOTO-2026-07-02-23-39-24 3.jpg',
-        'עגבניות': 'PHOTO-2026-07-02-23-39-24.jpg',
-        'רוזה': 'PHOTO-2026-07-02-23-39-23 3.jpg',
-        'ללא רוטב': 'PHOTO-2026-07-02-23-39-23 2.jpg'
-    },
-    'פוזילי': {
-        'פסטו': 'PHOTO-2026-07-02-23-39-11.jpg',
-        'שמנת': 'PHOTO-2026-07-02-23-39-15.jpg',
-        'פטריות': 'PHOTO-2026-07-02-23-39-11 5.jpg',
-        'עגבניות': 'PHOTO-2026-07-02-23-39-11 4.jpg', 
-        'רוזה': 'PHOTO-2026-07-02-23-39-11 3.jpg',
-        'ללא רוטב': 'PHOTO-2026-07-02-23-39-11 2.jpg'
-    },
-    'ספגטי': {
-        'פסטו': 'PHOTO-2026-07-02-23-39-07.jpg',
-        'שמנת': 'PHOTO-2026-07-02-23-39-07 5.jpg',
-        'עגבניות': 'PHOTO-2026-07-02-23-39-07 4.jpg',
-        'רוזה': 'PHOTO-2026-07-02-23-39-07 3.jpg',
-        'ללא רוטב': 'PHOTO-2026-07-02-23-39-07 2.jpg'
-    },
-    'פרפלה': {
-        'פסטו': 'PHOTO-2026-07-02-23-39-39 2.jpg',
-        'פטריות': 'PHOTO-2026-07-02-23-39-39.jpg',
-        'רוזה': 'PHOTO-2026-07-02-23-39-40 2.jpg',
-        'עגבניות': 'PHOTO-2026-07-02-23-39-40 3.jpg',
-        'שמנת': 'PHOTO-2026-07-02-23-39-40 4.jpg',
-        'ללא רוטב': 'PHOTO-2026-07-02-23-39-40.jpg'
-    }
-};
+body { background-color: #f5f5f5; margin: 0; padding: 20px; display: flex; justify-content: center; }
 
-const imageAssets = {
-    toppings: {
-        'טבעות בצל': 'PHOTO-2026-07-02-23-40-09.jpg',
-        'סלט ירקות': 'PHOTO-2026-07-02-23-40-10 2.jpg',
-        'ציפס': 'PHOTO-2026-07-02-23-40-10 3.jpg', 
-        'לחם שום': 'PHOTO-2026-07-02-23-40-10 4.jpg',
-        'סלט יווני': 'PHOTO-2026-07-02-23-40-10 5.jpg',
-        'גבינת פרמזן': 'PHOTO-2026-07-02-23-40-10.jpg'
-    },
-    drinks: {
-        'תה חם': 'PHOTO-2026-07-02-23-39-55 4.jpg',  
-        'מים': 'PHOTO-2026-07-02-23-39-55 5.jpg',      
-        'אספרסו': 'PHOTO-2026-07-02-23-39-55 6.jpg',   
-        'קולה': 'PHOTO-2026-07-02-23-39-55.jpg',       
-        'תה קר': 'PHOTO-2026-07-02-23-39-54 2.jpg',    
-        'מיץ תפוזים': 'PHOTO-2026-07-02-23-39-54.jpg', 
-        'מיץ תפוחים קר': 'PHOTO-2026-07-02-23-39-55 2.jpg', 
-        'פאנטה': 'PHOTO-2026-07-02-23-39-55 3.jpg'     
-    }
-};
+.app-container { display: flex; gap: 20px; max-width: 1200px; width: 100%; }
 
-// ==========================================
-// 2. אלמנטים מה-HTML
-// ==========================================
+.controls-section { display: flex; flex-direction: column; gap: 15px; width: 350px; }
 
-const mainDishImg = document.getElementById('main-dish-img');
-const sideToppingImg = document.getElementById('side-topping-img');
-const sideDrinkImg = document.getElementById('side-drink-img');
-const displayNameSpan = document.getElementById('display-name');
-const nameInput = document.getElementById('customer-name');
+.control-box { background-color: white; border: 1px solid #000; padding: 15px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
 
-// מצב התחלתי
-let currentPasta = document.querySelector('input[name="pasta-shape"]:checked').value;
-let currentSauce = document.querySelector('input[name="sauce"]:checked').value;
+.control-box h3 { margin-top: 0; text-decoration: underline; text-align: center; font-size: 16px; margin-bottom: 15px; }
 
-// ==========================================
-// 3. פונקציות לעדכון תמונות
-// ==========================================
+.control-box label { display: block; margin-bottom: 8px; cursor: pointer; }
 
-function updateMainDishImage() {
-    if (dishImages[currentPasta] && dishImages[currentPasta][currentSauce]) {
-        mainDishImg.src = `images/${dishImages[currentPasta][currentSauce]}`;
-        mainDishImg.style.display = 'block';
-    } else {
-        // אם אין תמונה ספציפית (כמו ספגטי פטריות), נסתיר או נציג משהו דיפולטיבי
-        mainDishImg.style.display = 'none';
-        console.warn(`תמונה חסרה עבור: ${currentPasta} + ${currentSauce}`);
-    }
+.input-group { display: flex; align-items: center; margin-bottom: 10px; }
+.input-group label { width: 80px; margin-bottom: 0; font-weight: bold; }
+.input-group input, .input-group textarea { flex: 1; padding: 5px; border: 1px solid #ccc; }
+.input-group textarea { height: 60px; resize: none; }
+
+/* דרישות מטלה: עיצוב כפתור שליחה (מנוטרל ופעיל) */
+.submit-btn {
+    display: block; width: 100%; margin: 15px auto 0; padding: 12px;
+    background-color: #4CAF50; color: white; border: none; cursor: pointer;
+    font-weight: bold; font-size: 16px; border-radius: 5px; transition: 0.3s;
 }
 
-// עדכון צורת פסטה ורוטב
-document.querySelectorAll('input[name="pasta-shape"]').forEach(radio => {
-    radio.addEventListener('change', (e) => {
-        currentPasta = e.target.value;
-        updateMainDishImage();
-    });
-});
-
-document.querySelectorAll('input[name="sauce"]').forEach(radio => {
-    radio.addEventListener('change', (e) => {
-        currentSauce = e.target.value;
-        updateMainDishImage();
-    });
-});
-
-// פונקציה כללית לטיפול בצ'קבוקסים מרובים (מציגה את האחרון שנבחר)
-function updateCheckboxImage(inputsSelector, imgElement, assetsObject) {
-    const inputs = document.querySelectorAll(inputsSelector);
-    inputs.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-            const checkedItems = Array.from(inputs).filter(cb => cb.checked);
-            if (checkedItems.length > 0) {
-                const lastChecked = checkedItems[checkedItems.length - 1].value;
-                if(assetsObject[lastChecked]) {
-                    imgElement.src = `images/${assetsObject[lastChecked]}`;
-                    imgElement.style.display = 'block';
-                }
-            } else {
-                imgElement.style.display = 'none';
-            }
-        });
-    });
+.submit-btn:disabled {
+    background-color: gray;
+    opacity: 0.5; /* דרישת מטלה: כפתור מופיע בשקיפות 0.5 */
+    cursor: not-allowed;
 }
 
-updateCheckboxImage('input[name="drink"]', sideDrinkImg, imageAssets.drinks);
-updateCheckboxImage('input[name="topping"]', sideToppingImg, imageAssets.toppings);
+.submit-btn:not(:disabled):hover { background-color: #45a049; }
 
-// עדכון שם הלקוח בלייב
-nameInput.addEventListener('input', (e) => {
-    displayNameSpan.textContent = e.target.value;
-});
+/* אזור תצוגה מקדימה */
+.preview-section { flex: 1; background-color: white; border: 2px solid #000; display: flex; flex-direction: column; }
+.preview-header { border-bottom: 2px solid #000; padding: 10px 20px; background-color: #eee; }
+.preview-header h2 { margin: 0; font-size: 24px; color: #333; }
 
-// קריאה ראשונית להצגת התמונה של הפנה ללא רוטב בעת טעינת העמוד
-updateMainDishImage();
+.preview-grid { display: grid; grid-template-columns: 1fr 250px; grid-template-rows: 200px 1fr; flex: 1; }
+.grid-drink { grid-column: 2; grid-row: 1 / 3; border-right: 2px solid #000; padding: 15px; }
+.grid-topping { grid-column: 1; grid-row: 1; border-bottom: 2px solid #000; padding: 15px; }
+.grid-main-dish { grid-column: 1; grid-row: 2; padding: 15px; text-align: center; }
 
-// ==========================================
-// 4. לוגיקת שליחת הזמנה (Modal)
-// ==========================================
+.preview-grid h3 { margin: 0 0 10px 0; }
 
-const submitBtn = document.getElementById('submit-btn');
-const modal = document.getElementById('summary-modal');
-const closeModalBtn = document.getElementById('close-modal-btn');
+.grid-main-dish img { max-height: 300px; max-width: 100%; object-fit: contain; }
 
-submitBtn.addEventListener('click', () => {
-    // איסוף נתונים
-    const name = nameInput.value || 'לא צוין שם';
-    const phone = document.getElementById('customer-phone').value || 'לא צוין טלפון';
-    const notes = document.getElementById('customer-notes').value || 'ללא הערות';
-    
-    const toppings = Array.from(document.querySelectorAll('input[name="topping"]:checked')).map(cb => cb.value).join(', ') || 'ללא תוספות';
-    const drinks = Array.from(document.querySelectorAll('input[name="drink"]:checked')).map(cb => cb.value).join(', ') || 'ללא שתייה';
+/* גלריית תמונות לתוספות ושתייה */
+.items-gallery { display: flex; flex-wrap: wrap; gap: 10px; }
 
-    // הזנת נתונים למודל
-    document.getElementById('summary-name').textContent = name;
-    document.getElementById('summary-phone').textContent = phone;
-    document.getElementById('summary-pasta').textContent = currentPasta;
-    document.getElementById('summary-sauce').textContent = currentSauce;
-    document.getElementById('summary-toppings').textContent = toppings;
-    document.getElementById('summary-drinks').textContent = drinks;
-    document.getElementById('summary-notes').textContent = notes;
+/* דרישות מטלה: תמונות צ'ק-בוקס מופיעות מראש בחצי שקיפות */
+.faded-img {
+    width: 60px; height: 60px; object-fit: contain;
+    opacity: 0.3; /* מותאם ל"חצי שקיפות", אפשר לשנות ל-0.5 */
+    filter: grayscale(80%);
+    transition: 0.3s all;
+}
 
-    // הצגת המודל
-    modal.style.display = 'block';
-});
+/* הדגשת התמונה בבחירה */
+.faded-img.active-img {
+    opacity: 1;
+    filter: none;
+    transform: scale(1.15);
+}
 
-// סגירת המודל
-closeModalBtn.addEventListener('click', () => {
-    modal.style.display = 'none';
-});
-
-// סגירה בלחיצה מחוץ למודל
-window.addEventListener('click', (event) => {
-    if (event.target === modal) {
-        modal.style.display = 'none';
-    }
-});
+/* מודל סיכום (Modal) */
+.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); }
+.modal-content { background-color: #fff; margin: 10% auto; padding: 25px; border-radius: 8px; width: 400px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+.modal-content h2 { margin-top: 0; text-align: center; border-bottom: 2px solid #4CAF50; padding-bottom: 10px; color: #333; }
+.modal-content p { font-size: 16px; margin-bottom: 8px; border-bottom: 1px dashed #ccc; padding-bottom: 5px;}
+#close-modal-btn { display: block; width: 100%; padding: 10px; margin-top: 20px; background-color: #333; color: white; border: none; cursor: pointer; border-radius: 5px; font-size: 16px;}
+#close-modal-btn:hover { background-color: #555; }
