@@ -18,6 +18,7 @@ const nameInput = document.getElementById('customer-name');
 const submitBtn = document.getElementById('submit-btn');
 const displayNameSpan = document.getElementById('display-name');
 const sauceInputs = document.querySelectorAll('input[name="sauce"]');
+const pastaInputs = document.querySelectorAll('input[name="pasta-shape"]');
 
 // אתחול: חסימת כפתורי הרוטב עד לבחירת פסטה
 sauceInputs.forEach(input => input.disabled = true);
@@ -29,7 +30,7 @@ function createFadedImages(containerId, assetsDict, typePrefix) {
         const img = document.createElement('img');
         img.src = `images/${assetsDict[itemName]}`;
         img.id = `img-${typePrefix}-${itemName.replace(/\s+/g, '-')}`;
-        img.className = 'faded-img'; 
+        img.className = 'faded-img';
         container.appendChild(img);
     });
 }
@@ -49,39 +50,77 @@ nameInput.addEventListener('input', (e) => {
     checkFormValidity();
 });
 
-// === לוגיקת פסטה ורוטב ===
-function updateMainDishImage() {
+/*
+ * מגביל את כפתורי הרוטב לפי הפסטה שנבחרה: רק רטבים שבאמת קיימת
+ * להם תמונה עבור אותה צורת פסטה יהיו זמינים ללחיצה. אם הרוטב שהיה
+ * מסומן לא קיים לפסטה החדשה, הבחירה מתאפסת אוטומטית ל"ללא רוטב".
+ */
+function updateAvailableSauces() {
     const selectedPasta = document.querySelector('input[name="pasta-shape"]:checked');
-    const selectedSauce = document.querySelector('input[name="sauce"]:checked');
-    
-    if (selectedPasta) {
-        // הסתרת הפלייסבולדר והצגת התמונה
-        emptyPlaceholder.style.display = 'none';
-        
-        const pasta = selectedPasta.value;
-        const sauce = selectedSauce ? selectedSauce.value : 'ללא רוטב';
-        
-        if (dishImages[pasta] && dishImages[pasta][sauce]) {
-            mainDishImg.src = `images/${dishImages[pasta][sauce]}`;
-            mainDishImg.style.display = 'block';
-        } else {
-            mainDishImg.style.display = 'none'; // אם חסרה תמונה לשילוב ספציפי
+    if (!selectedPasta) return;
+
+    const availableSauces = Object.keys(dishImages[selectedPasta.value] || {});
+    let checkedSauceStillValid = false;
+
+    sauceInputs.forEach(input => {
+        const isAvailable = availableSauces.includes(input.value);
+        input.disabled = !isAvailable;
+
+        if (input.checked) {
+            if (isAvailable) {
+                checkedSauceStillValid = true;
+            } else {
+                // הרוטב שהיה מסומן לא קיים לצורת הפסטה החדשה - מבטלים סימון
+                input.checked = false;
+            }
+        }
+    });
+
+    // אם אין רוטב תקף מסומן, בוחרים ברירת מחדל "ללא רוטב" (קיימת לכל הפסטות)
+    if (!checkedSauceStillValid) {
+        const noSauceOption = document.querySelector('input[name="sauce"][value="ללא רוטב"]');
+        if (noSauceOption && availableSauces.includes('ללא רוטב')) {
+            noSauceOption.checked = true;
         }
     }
 }
 
-// האזנה לבחירת פסטה (משחרר את הרוטב)
-document.querySelectorAll('input[name="pasta-shape"]').forEach(radio => {
+// === לוגיקת פסטה ורוטב - הצגת התמונה התואמת בדיוק לצירוף שנבחר ===
+function updateMainDishImage() {
+    const selectedPasta = document.querySelector('input[name="pasta-shape"]:checked');
+    const selectedSauce = document.querySelector('input[name="sauce"]:checked');
+
+    if (!selectedPasta) {
+        // אין פסטה נבחרת עדיין - חזרה למצב הריק
+        mainDishImg.style.display = 'none';
+        emptyPlaceholder.style.display = 'block';
+        emptyPlaceholder.querySelector('p').textContent = 'בחר סוג פסטה להצגת המנה';
+        return;
+    }
+
+    const pasta = selectedPasta.value;
+    const sauce = selectedSauce ? selectedSauce.value : 'ללא רוטב';
+    const matchingImage = dishImages[pasta] && dishImages[pasta][sauce];
+
+    if (matchingImage) {
+        // נמצאה תמונה שתואמת בדיוק לצירוף פסטה+רוטב שנבחר
+        mainDishImg.src = `images/${matchingImage}`;
+        mainDishImg.style.display = 'block';
+        emptyPlaceholder.style.display = 'none';
+    } else {
+        // גיבוי: אין תמונה לצירוף הזה (לא אמור לקרות כי הרטבים הלא-זמינים
+        // כבר מנוטרלים ב-updateAvailableSauces, אך נשאר כרשת ביטחון)
+        mainDishImg.style.display = 'none';
+        emptyPlaceholder.style.display = 'block';
+        emptyPlaceholder.querySelector('p').textContent = `אין תמונה זמינה ל${pasta} עם ${sauce}`;
+    }
+}
+
+// האזנה לבחירת פסטה
+pastaInputs.forEach(radio => {
     radio.addEventListener('change', () => {
-        // שחרור כפתורי הרוטב ללחיצה
-        sauceInputs.forEach(input => input.disabled = false);
-        
-        // בחירת ברירת מחדל של "ללא רוטב" אם טרם נבחר, כדי להציג מיד תמונה
-        if(!document.querySelector('input[name="sauce"]:checked')) {
-            document.querySelector('input[name="sauce"][value="ללא רוטב"]').checked = true;
-        }
-        
-        updateMainDishImage();
+        updateAvailableSauces();   // מסנן את הרטבים הזמינים לפסטה שנבחרה
+        updateMainDishImage();     // מציג את התמונה התואמת
         checkFormValidity();
     });
 });
@@ -110,10 +149,10 @@ submitBtn.addEventListener('click', () => {
     document.getElementById('summary-name').textContent = nameInput.value;
     document.getElementById('summary-pasta').textContent = document.querySelector('input[name="pasta-shape"]:checked')?.value;
     document.getElementById('summary-sauce').textContent = document.querySelector('input[name="sauce"]:checked')?.value || 'ללא רוטב';
-    
+
     const toppings = Array.from(document.querySelectorAll('input[name="topping"]:checked')).map(cb => cb.value).join(', ') || 'ללא';
     const drinks = Array.from(document.querySelectorAll('input[name="drink"]:checked')).map(cb => cb.value).join(', ') || 'ללא';
-    
+
     document.getElementById('summary-toppings').textContent = toppings;
     document.getElementById('summary-drinks').textContent = drinks;
     document.getElementById('summary-notes').textContent = document.getElementById('customer-notes').value || 'אין הערות';
